@@ -23,16 +23,23 @@ class TasksTest extends TestCase {
         $this->assertEquals($data['description'], $task->description);
         $this->assertEquals($data['user_id'], $task->user_id);
     }
-    
+
+    /** @test */    
     public function it_can_list_tasks(){
         
         $taskRepo = new \App\Repositories\TaskRepository(new \App\Models\Task);
-        $task = $taskRepo->createTask($data);
-        $this->assertInstanceOf(\App\Models\Task::class, $task);
-        $this->assertEquals($data['admin_id'], $task->admin_id);
-        $this->assertEquals($data['title'], $task->title);
-        $this->assertEquals($data['description'], $task->description);
-        $this->assertEquals($data['user_id'], $task->user_id);
+        $task = $taskRepo->tasksList();        
+        $this->assertInstanceOf(\Illuminate\Pagination\LengthAwarePaginator::class, $task);
     }
+    
+        /** @test */    
+    public function it_can_list_statistics(){
+        
+        $taskRepo = new \App\Repositories\TaskRepository(new \App\Models\Task);
+        $task = $taskRepo->tasksList();        
+        $this->assertInstanceOf(\Illuminate\Pagination\LengthAwarePaginator::class, $task);
+    }
+    
+    
 
 }

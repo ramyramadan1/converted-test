@@ -11,6 +11,7 @@ use App\Models\User;
 use App\Models\Statistics;
 use Illuminate\Routing\Controller as BaseController;
 use App\Repositories\TaskRepository;
+use App\Repositories\StatisticsRepository;
 /**
  * Description of TasksController
  *
@@ -19,17 +20,17 @@ use App\Repositories\TaskRepository;
 class TasksController extends BaseController {
 
     private $taskRepo;
-    public function __construct(TaskRepository $taskRepo) {
+    private $statisticsRepo;
+    public function __construct(TaskRepository $taskRepo,StatisticsRepository $statisticsRepository) {
         $this->taskRepo = $taskRepo;
+        $this->statisticsRepo = $statisticsRepository;
     }
     /**
      * Show all Tasks 
      * @return view
      */
     public function index() {
-        
-        $allTasks = $this->taskRepo->tasksList();
-        
+        $allTasks = $this->taskRepo->tasksList();   
         return view('tasksList', ['all_tasks' => $allTasks]);
     }
     
@@ -51,9 +52,8 @@ class TasksController extends BaseController {
     }
     
     public function statisticsPage(){
-        $topTenUsers=Statistics::select(['statistics.id','users.name','tasks_count'])
-                ->join('users','statistics.user_id','users.id')
-                ->get();
+        $topTenUsers = $this->statisticsRepo->statisticsList();
+        
         return view('tasksStatistics',['top_ten_users'=>$topTenUsers]);
     }
 

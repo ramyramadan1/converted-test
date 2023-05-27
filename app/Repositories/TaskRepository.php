@@ -20,7 +20,11 @@ class TaskRepository {
     
     
     public function createTask(array $data) : Task{
+        try{
             return $this->model->create($data);
+        }catch(\Exception $queryException){
+            throw new CreateTaskErrorException($queryException);
+        }
     }
     
     public function tasksList() {
@@ -29,4 +33,5 @@ class TaskRepository {
                 ->join('users as users_list','tasks.user_id','users_list.id')
                 ->paginate(5);
     }
+    
 }
